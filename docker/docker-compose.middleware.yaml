@@ -1,4 +1,26 @@
 services:
+
+  # nodejs 仪志鑫
+  nodejs:
+    image: node:22-alpine
+    restart: always
+    env_file:
+      - ./middleware.env
+    volumes:
+      # Mount the redis data directory to the container.
+      - ${NODEJS_VOLUME:-F:\docker\Docker\Ubuntu-data\dify}:/data
+    # Set the redis password when startup redis server.
+    command: >
+      sh -c "
+      npm i -g pnpm &&
+      pnpm install &&
+      pnpm start
+      "
+    ports:
+      - "${EXPOSE_NODEJS_PORT:-3000}:3000"
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://localhost:3000/health" ]
+
   # The postgres database.
   db:
     image: postgres:15-alpine
